@@ -7,7 +7,7 @@ namespace :rspec_watcher do
 
     require 'rspec/core'
 
-    config_path = Rails.root.join('config/rspec_watcher')
+    config_path = Rails.root.join('config/rspec_watcher').to_s
     if File.exist?(config_path)
       require config_path
     else
