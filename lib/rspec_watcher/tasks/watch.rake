@@ -6,7 +6,13 @@ namespace :rspec_watcher do
     abort('Not running in test environment') unless Rails.env.test?
 
     require 'rspec/core'
-    require Rails.root.join('config/rspec_watcher')
+
+    config_path = Rails.root.join('config/rspec_watcher')
+    if File.exist?(config_path)
+      require config_path
+    else
+      require_relative '../default_configuration'
+    end
 
     RSpecWatcher.start
 

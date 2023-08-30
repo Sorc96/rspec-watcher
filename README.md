@@ -1,6 +1,6 @@
 # RspecWatcher
 
-Automatically runs specs in reaction to changes in files. Loads the project once and uses code reloading to get changes instead of starting a new process for every test run.
+Automatically runs specs in reaction to changes in files. Loads the project once and uses code reloading to get changes instead of starting a new process for every test run. Needs to be restarted after changes to files that do not get reloaded.
 
 ## Installation
 
@@ -14,7 +14,11 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-Example configuration for a Rails project in `config/rspec_watcher.rb`:
+Start the watcher with `RAILS_ENV=test bundle exec rake rspec_watcher:watch`
+
+In order to use the watcher without Rails, `path_inferrer` and `reloader` need to be configured. Check `lib/rspec_watcher.rb`. The rake task also assumes usage inside a Rails project.
+
+Configuration can be specified in `config/rspec_watcher.rb`, this is the default:
 
 ```ruby
 RSpecWatcher.configure do
@@ -39,10 +43,6 @@ RSpecWatcher.configure do
   watch 'config', only: /routes\.rb\z/
 end
 ```
-
-Start the watcher with `RAILS_ENV=test bundle exec rake rspec_watcher:watch`
-
-In order to use trhe watcher without Rails, `path_inferrer` and `reloader` need to be configured. Check `lib/rspec_watcher.rb`
 
 ## Development
 
