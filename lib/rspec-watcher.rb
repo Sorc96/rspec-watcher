@@ -10,6 +10,7 @@ module RSpecWatcher
 
   @path_inferrer = PATH_INFERRER
   @reloader = RELOADER
+  @rules = []
 
   class << self
     attr_accessor :path_inferrer, :reloader

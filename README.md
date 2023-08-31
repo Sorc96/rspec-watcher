@@ -1,48 +1,66 @@
-# RspecWatcher
+# RSpecWatcher
 
-Automatically runs specs in reaction to changes in files. Loads the project once and uses code reloading to get changes instead of starting a new process for every test run. Needs to be restarted after changes to files that do not get reloaded.
+Provides an instant feedback loop for TDD with RSpec. Automatically runs specs in reaction to changes in files. Inspired by [Guard](https://github.com/guard/guard), but unlike Guard, the watcher does not start a new process every time. It only loads the project once and uses code reloading to get changes. Needs to be restarted after changes to files that do not get reloaded (just like you would restart a Rails development server).
+
+Specs that fail are remembered and will be rerun until they pass again. This enables a nearly instant TDD feedbeck loop, because every spec we add will be automatically picked up and run until we add the implementation.
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+Add `rspec-watcher` to the Gemfile, only needs to exist in the `test` group.
 
-    $ bundle add rspec-watcher
+```ruby
+group :test do
+  gem 'rspec-watcher'
+end
+```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install rspec-watcher
+Then run `bundle install`
 
 ## Usage
 
-Start the watcher with `RAILS_ENV=test bundle exec rake rspec_watcher:watch`
+### Configuration
 
-In order to use the watcher without Rails, `path_inferrer` and `reloader` need to be configured. Check `lib/rspec_watcher.rb`. The rake task also assumes usage inside a Rails project.
-
-Configuration can be specified in `config/rspec_watcher.rb`, this is the default:
+Disable caching classes in `config/environments/test.rb` when the watcher is running:
 
 ```ruby
-RSpecWatcher.configure do
-  watch 'spec', only: /_spec\.rb\z/ do |modified, added, _removed|
-    modified + added
-  end
+config.cache_classes = ENV['RSPEC_WATCHER'].nil?
+```
 
-  watch 'spec', ignore: /_spec\.rb\z/
+Rules for the watcher and other options can be customized, for example in a Rails initializer. Not passing a block to a `watch` rule will run all specs. The configuration shown here is used by default:
 
-  watch 'app', only: /\.rb\z/, ignore: %r{controllers/} do |modified, added, removed|
-    (modified + added + removed).map do |path|
-      path.sub('app/', 'spec/').sub('.rb', '_spec.rb')
+```ruby
+# config/initializers/rspec_watcher.rb
+
+if ENV['RSPEC_WATCHER']
+  RSpecWatcher.configure do
+    watch 'spec', only: /_spec\.rb\z/ do |modified, added, _removed|
+      modified + added
     end
-  end
 
-  watch 'app/controllers', only: /\.rb\z/ do |modified, added, removed|
-    (modified + added + removed).map do |path|
-      path.sub('app/', 'spec/').sub('controllers/', 'requests/').sub('_controller.rb', '_spec.rb')
+    watch 'spec', ignore: /_spec\.rb\z/
+
+    watch 'app', only: /\.rb\z/, ignore: %r{controllers/} do |modified, added, removed|
+      (modified + added + removed).map do |path|
+        path.sub('app/', 'spec/').sub('.rb', '_spec.rb')
+      end
     end
-  end
 
-  watch 'config', only: /routes\.rb\z/
+    watch 'app/controllers', only: /\.rb\z/ do |modified, added, removed|
+      (modified + added + removed).map do |path|
+        path.sub('app/', 'spec/').sub('controllers/', 'requests/').sub('_controller.rb', '_spec.rb')
+      end
+    end
+
+    watch 'config', only: /routes\.rb\z/
+  end
 end
 ```
+
+### Running the watcher
+
+Start the watcher with `RAILS_ENV=test bundle exec rake rspec_watcher:watch`
+
+In order to use the watcher without Rails, `path_inferrer` and `reloader` need to be configured. Check `lib/rspec-watcher.rb`.
 
 ## Development
 
