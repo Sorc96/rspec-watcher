@@ -5,8 +5,6 @@ namespace :rspec_watcher do
   task :watch do
     abort('Not running in test environment') if defined?(Rails) && !Rails.env.test?
 
-    require 'rspec/core'
-
     ENV['RSPEC_WATCHER'] = 'true'
 
     if RSpecWatcher.rules.empty?

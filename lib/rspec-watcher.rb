@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'listen'
+require 'rspec/core'
+
 require_relative 'rspec_watcher/version'
 require_relative 'rspec_watcher/railtie' if defined?(Rails)
 
