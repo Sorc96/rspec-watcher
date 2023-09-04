@@ -3,9 +3,13 @@
 namespace :rspec_watcher do
   desc 'Start the watcher'
   task :watch do
-    abort('Not running in test environment') if defined?(Rails) && !Rails.env.test?
-
     ENV['RSPEC_WATCHER'] = 'true'
+
+    if defined?(Rails)
+      abort('Not running in test environment') unless Rails.env.test?
+
+      Rake::Task['environment'].invoke
+    end
 
     if RSpecWatcher.rules.empty?
       require_relative '../default_configuration'
