@@ -5,7 +5,7 @@ RSpecWatcher.configure do
     modified + added
   end
 
-  watch 'spec', ignore: /_spec\.rb\z/
+  watch 'spec', ignore: /_spec\.rb\z|examples.txt\z/
 
   watch 'app', only: /\.rb\z/, ignore: %r{controllers/} do |modified, added, removed|
     (modified + added + removed).map do |path|
