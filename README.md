@@ -23,6 +23,12 @@ Then run `bundle install`
 Disable caching classes in `config/environments/test.rb` when the watcher is running:
 
 ```ruby
+config.enable_reloading = ENV['RSPEC_WATCHER'] == 'true'
+```
+
+For older versions of Rails (< 7.1), instead use:
+
+```ruby
 config.cache_classes = ENV['RSPEC_WATCHER'].nil?
 ```
 
