@@ -47,13 +47,17 @@ if ENV['RSPEC_WATCHER']
 
     watch 'app', only: /\.rb\z/, ignore: %r{controllers/} do |modified, added, removed|
       (modified + added + removed).map do |path|
-        path.sub('app/', 'spec/').sub('.rb', '_spec.rb')
+        file_path = Pathname.new(path).relative_path_from(Rails.root.join('app'))
+        spec_path = file_path.sub(/.rb\z/, '_spec.rb')
+        Rails.root.join('spec', spec_path).to_s
       end
     end
 
     watch 'app/controllers', only: /\.rb\z/ do |modified, added, removed|
       (modified + added + removed).map do |path|
-        path.sub('app/', 'spec/').sub('controllers/', 'requests/').sub('_controller.rb', '_spec.rb')
+        file_path = Pathname.new(path).relative_path_from(Rails.root.join('app', 'controllers'))
+        spec_path = file_path.sub(/_controller.rb\z/, '_spec.rb')
+        Rails.root.join('spec', 'requests', spec_path).to_s
       end
     end
 
