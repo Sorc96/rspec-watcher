@@ -2,7 +2,7 @@
 
 Provides an instant feedback loop for TDD with RSpec. Automatically runs specs in reaction to changes in files. Inspired by [Guard](https://github.com/guard/guard), but unlike Guard, the watcher does not start a new process every time. It only loads the project once and uses code reloading to get changes. Needs to be restarted after changes to files that do not get reloaded (just like you would restart a Rails development server).
 
-Specs that fail are remembered and will be rerun until they pass again. This enables a nearly instant TDD feedbeck loop, because every spec we add will be automatically picked up and run until we add the implementation.
+Specs that fail are remembered and will be rerun until they pass again. This enables a nearly instant TDD feedback loop, because every spec we add will be automatically picked up and run until we add the implementation.
 
 ## Installation
 
@@ -16,7 +16,7 @@ end
 
 Then run `bundle install`
 
-## Usage
+## Usage with Rails
 
 ### Configuration
 
@@ -69,6 +69,8 @@ end
 ### Running the watcher
 
 Start the watcher with `RAILS_ENV=test bundle exec rake rspec_watcher:watch`
+
+## Usage without Rails
 
 In order to use the watcher without Rails, `path_inferrer` and `reloader` need to be configured. Check `lib/rspec-watcher.rb`.
 
